@@ -4,15 +4,80 @@
     <script type="text/processing" data-processing-target="processing-canvas">
 
     // Code here!!!
+ArrayList<Light> lights;
 
-    void setup() {
-      size (500, 500);
-    }
+boolean tinselMode;
 
-    void draw() {
-      background(0, 0, 255);
-      ellipse(mouseX, mouseY, 20, 20);
+void setup() {
+  size(500, 500);
+  lights = new ArrayList<Light>();
+
+  background(0);
+  // Draw a tree
+  noStroke();
+  colorMode(RGB);
+  fill(0, 190, 0);
+  triangle(width/2 - 50, 150, width/2, 50, width/2 + 50, 150);
+  triangle(width/2 - 75, 250, width/2, 100, width/2 + 75, 250);
+  triangle(width/2 - 100, 350, width/2, 200, width/2 + 100, 350);
+  fill(100, 100, 0);
+  rect(width/2 - 20, 350, 40, 50);
+}
+
+void keyPressed() {
+  if (key == 't') {
+    tinselMode = !tinselMode;
+  }
+}
+
+void mouseDragged() {
+  if (tinselMode) {
+    colorMode(HSB);
+    float hue = random(20, 30);
+    stroke(hue, 255, 200);
+    strokeWeight(3);
+    line(mouseX, mouseY, mouseX + random(-10, 10), mouseY + random(-10, 10));
+  }
+}
+
+void mousePressed() {
+  if (!tinselMode) {
+    lights.add(new Light());
+  }
+}
+
+
+void draw() {
+  for (int i = 0; i < lights.size(); i++) {
+    lights.get(i).draw();
+  }
+}
+
+class Light {
+  float x;
+  float y;
+  float hue;
+  int offset;
+
+  Light() {
+    x = mouseX;
+    y = mouseY;
+    hue = random(255);
+    //offset = int(random(2, 8));
+    offset = 2;
+  }
+
+  void draw() {
+    noStroke();
+    colorMode(HSB);
+    if (second() % offset == 0) {
+      fill(hue, 200, 255);
+    } else {
+      fill(hue, 200, 128);
     }
+    ellipse(x, y, 20, 20);
+  }
+}
 
 
    // End of code
